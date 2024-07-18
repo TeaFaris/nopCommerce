@@ -5,7 +5,6 @@ using Nop.Services.Plugins;
 using Nop.Services.Security;
 using Nop.Web.Framework;
 using Nop.Web.Framework.Menu;
-using Nop.Web.Framework.Mvc.Filters;
 
 namespace Nop.Plugin.Misc.NopMobileApp;
 

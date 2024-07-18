@@ -13,7 +13,7 @@ namespace Nop.Web.Framework.Mvc.Filters;
 /// Represents a filter attribute that confirms access to functional
 /// </summary>
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-public class CheckPermissionAttribute : TypeFilterAttribute
+public partial class CheckPermissionAttribute : TypeFilterAttribute
 {
     #region Ctor
 

@@ -8,7 +8,7 @@ namespace Nop.Web.Areas.Admin.Factories;
 /// <summary>
 /// Represents the model factory which supports access control list (ACL)
 /// </summary>
-public class AclSupportedModelFactory : IAclSupportedModelFactory
+public partial class AclSupportedModelFactory : IAclSupportedModelFactory
 {
     #region Fields
 
@@ -36,7 +36,7 @@ public class AclSupportedModelFactory : IAclSupportedModelFactory
     /// <typeparam name="TModel">ACL supported model type</typeparam>
     /// <param name="model">Model</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task PrepareModelCustomerRolesAsync<TModel>(TModel model) where TModel : IAclSupportedModel
+    public virtual async Task PrepareModelCustomerRolesAsync<TModel>(TModel model) where TModel : IAclSupportedModel
     {
         ArgumentNullException.ThrowIfNull(model);
 
@@ -57,7 +57,7 @@ public class AclSupportedModelFactory : IAclSupportedModelFactory
     /// <param name="model">Model</param>
     /// <param name="entityName">Entity name</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task PrepareModelCustomerRolesAsync<TModel>(TModel model, string entityName)
+    public virtual async Task PrepareModelCustomerRolesAsync<TModel>(TModel model, string entityName)
         where TModel : BaseNopEntityModel, IAclSupportedModel
     {
         ArgumentNullException.ThrowIfNull(model);
