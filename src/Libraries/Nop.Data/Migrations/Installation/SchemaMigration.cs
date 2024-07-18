@@ -153,6 +153,9 @@ public class SchemaMigration : ForwardOnlyMigration
         Create.TableFor<Poll>();
         Create.TableFor<PollAnswer>();
         Create.TableFor<PollVotingRecord>();
+        Create.TableFor<AclRecord>();
+        Create.TableFor<PermissionRecord>();
+        Create.TableFor<PermissionRecordCustomerRoleMapping>();
         Create.TableFor<UrlRecord>();
         Create.TableFor<ScheduleTask>();
         Create.TableFor<TaxCategory>();
@@ -162,10 +165,5 @@ public class SchemaMigration : ForwardOnlyMigration
         Create.TableFor<VendorAttribute>();
         Create.TableFor<VendorAttributeValue>();
         Create.TableFor<VendorNote>();
-
-        //ACL
-        Create.TableFor<PermissionRecord>();
-        Create.TableFor<PermissionRecordCustomerRoleMapping>();
-        Create.TableFor<AclRecord>();
     }
 }

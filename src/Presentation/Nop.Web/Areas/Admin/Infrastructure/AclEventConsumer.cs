@@ -11,7 +11,6 @@ using Nop.Services.Security;
 using Nop.Services.Topics;
 using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Catalog;
-using Nop.Web.Areas.Admin.Models.Common;
 using Nop.Web.Areas.Admin.Models.Plugins;
 using Nop.Web.Areas.Admin.Models.Topics;
 using Nop.Web.Framework.Events;
@@ -20,16 +19,14 @@ using Nop.Web.Framework.Models;
 namespace Nop.Web.Areas.Admin.Infrastructure;
 
 /// <summary>
-/// Represents plugin event consumer
+/// Represents ACL event consumer
 /// </summary>
-public class AclEventConsumer : IConsumer<ModelPreparedEvent<BaseNopModel>>,
+public partial class AclEventConsumer : IConsumer<ModelPreparedEvent<BaseNopModel>>,
     IConsumer<ModelReceivedEvent<BaseNopModel>>,
     IConsumer<EntityInsertedEvent<Manufacturer>>,
     IConsumer<EntityInsertedEvent<Product>>,
     IConsumer<EntityInsertedEvent<Topic>>,
-    IConsumer<EntityInsertedEvent<Category>>,
-    IConsumer<ModelPreparedEvent<IList<BaseNopModel>>>,
-    IConsumer<PostCopyProductEvent>
+    IConsumer<EntityInsertedEvent<Category>>
 {
     #region Fields
 
@@ -93,26 +90,13 @@ public class AclEventConsumer : IConsumer<ModelPreparedEvent<BaseNopModel>>,
     #endregion
 
     #region Methods
-
-    /// <summary>
-    /// Handle event
-    /// </summary>
-    /// <param name="eventMessage">Event</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(PostCopyProductEvent eventMessage)
-    {
-        var customerRoleIds = await _aclService.GetCustomerRoleIdsWithAccessAsync(eventMessage.Product.Id, nameof(Product));
-
-        foreach (var id in customerRoleIds)
-            await _aclService.InsertAclRecordAsync(eventMessage.NewProduct, id);
-    }
-
+    
     /// <summary>
     /// Handle model prepared event
     /// </summary>
     /// <param name="eventMessage">Event message</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(ModelPreparedEvent<BaseNopModel> eventMessage)
+    public virtual async Task HandleEventAsync(ModelPreparedEvent<BaseNopModel> eventMessage)
     {
         if (eventMessage.Model is not IAclSupportedModel)
             return;
@@ -142,7 +126,7 @@ public class AclEventConsumer : IConsumer<ModelPreparedEvent<BaseNopModel>>,
     /// </summary>
     /// <param name="eventMessage">Event message</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(ModelReceivedEvent<BaseNopModel> eventMessage)
+    public virtual async Task HandleEventAsync(ModelReceivedEvent<BaseNopModel> eventMessage)
     {
         if (eventMessage.Model is not IAclSupportedModel model)
             return;
@@ -185,7 +169,7 @@ public class AclEventConsumer : IConsumer<ModelPreparedEvent<BaseNopModel>>,
     /// </summary>
     /// <param name="eventMessage">Event message</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityInsertedEvent<Manufacturer> eventMessage)
+    public virtual async Task HandleEventAsync(EntityInsertedEvent<Manufacturer> eventMessage)
     {
         var entity = eventMessage.Entity;
         await SaveStoredDataAsync(entity.Name, entity);
@@ -196,7 +180,7 @@ public class AclEventConsumer : IConsumer<ModelPreparedEvent<BaseNopModel>>,
     /// </summary>
     /// <param name="eventMessage">Event message</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityInsertedEvent<Product> eventMessage)
+    public virtual async Task HandleEventAsync(EntityInsertedEvent<Product> eventMessage)
     {
         var entity = eventMessage.Entity;
         await SaveStoredDataAsync(entity.Name, entity);
@@ -207,7 +191,7 @@ public class AclEventConsumer : IConsumer<ModelPreparedEvent<BaseNopModel>>,
     /// </summary>
     /// <param name="eventMessage">Event message</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityInsertedEvent<Topic> eventMessage)
+    public virtual async Task HandleEventAsync(EntityInsertedEvent<Topic> eventMessage)
     {
         var entity = eventMessage.Entity;
         await SaveStoredDataAsync(entity.Title, entity);
@@ -218,31 +202,11 @@ public class AclEventConsumer : IConsumer<ModelPreparedEvent<BaseNopModel>>,
     /// </summary>
     /// <param name="eventMessage">Event message</param>
     /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(EntityInsertedEvent<Category> eventMessage)
+    public virtual async Task HandleEventAsync(EntityInsertedEvent<Category> eventMessage)
     {
         var entity = eventMessage.Entity;
         await SaveStoredDataAsync(entity.Name, entity);
     }
-
-    /// <summary>
-    /// Handle model prepared event
-    /// </summary>
-    /// <param name="eventMessage">Event message</param>
-    /// <returns>A task that represents the asynchronous operation</returns>
-    public async Task HandleEventAsync(ModelPreparedEvent<IList<BaseNopModel>> eventMessage)
-    {
-        if (eventMessage.Model is not IList<SystemWarningModel> models)
-            return;
-
-        if (_catalogSettings.IgnoreAcl)
-            return;
-
-        models.Add(new SystemWarningModel
-        {
-            Level = SystemWarningLevel.Recommendation,
-            Text = await _localizationService.GetResourceAsync("Admin.System.Warnings.Performance.IgnoreAcl")
-        });
-    }
-
+    
     #endregion
 }

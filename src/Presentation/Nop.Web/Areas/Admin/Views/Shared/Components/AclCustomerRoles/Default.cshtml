@@ -1,6 +1,4 @@
-@using Nop.Core.Domain.Catalog
 @model Nop.Web.Framework.Models.IAclSupportedModel
-@inject CatalogSettings catalogSettings
 
 <div class="form-group advanced-setting row">
     <div class="col-md-3">
@@ -25,14 +23,9 @@
 					});
                 </script>
             </div>
-            @if (catalogSettings.IgnoreAcl)
-            {
-                <div class="col-md-8">
-                    <div class="callout bg-gray-light no-margin">
-                        @T("Admin.System.Warnings.Performance.IgnoreAcl.Notification")
-                    </div>
-                </div>
-            }
+            <div class="col-md-8">
+                @await Component.InvokeAsync(typeof(AclDisabledWarningViewComponent))
+            </div>
         </div>
     </div>
 </div>

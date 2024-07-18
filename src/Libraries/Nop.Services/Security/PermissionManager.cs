@@ -49,13 +49,11 @@ public partial class PermissionManager : IPermissionManager
     /// Insert permissions by list of permission configs
     /// </summary>
     /// <param name="configs">Permission configs</param>
-    protected void InstallPermissions(IList<PermissionConfig> configs)
+    protected async Task InstallPermissionsAsync(IList<PermissionConfig> configs)
     {
         if (!configs?.Any() ?? true)
             return;
-
-        var languages = _languageService.GetAllLanguages(true);
-
+        
         foreach (var config in configs)
         {
             //new permission (install it)
@@ -67,7 +65,7 @@ public partial class PermissionManager : IPermissionManager
             };
 
             //save new permission
-            _permissionRecordRepository.Insert(permission);
+            await _permissionRecordRepository.InsertAsync(permission);
 
             foreach (var systemRoleName in config.DefaultCustomerRoles)
             {
@@ -83,14 +81,14 @@ public partial class PermissionManager : IPermissionManager
                         SystemName = systemRoleName
                     };
 
-                    _customerRoleRepository.Insert(customerRole);
+                    await _customerRoleRepository.InsertAsync(customerRole);
                 }
 
                 InsertPermissionRecordCustomerRoleMapping(new PermissionRecordCustomerRoleMapping { CustomerRoleId = customerRole.Id, PermissionRecordId = permission.Id });
             }
 
             //save localization
-            _localizationService.SaveLocalizedPermissionName(languages, permission);
+            await _localizationService.SaveLocalizedPermissionNameAsync(permission);
         }
     }
 
@@ -219,7 +217,7 @@ public partial class PermissionManager : IPermissionManager
         var mapping = await GetMappingByPermissionRecordIdAsync(permission.Id);
 
         await _permissionRecordCustomerRoleMappingRepository.DeleteAsync(mapping);
-        await _localizationService.DeleteLocalizedPermissionNameAsync(await _languageService.GetAllLanguagesAsync(true), permission);
+        await _localizationService.DeleteLocalizedPermissionNameAsync(permission);
         await _permissionRecordRepository.DeleteAsync(permission);
     }
 
@@ -266,9 +264,9 @@ public partial class PermissionManager : IPermissionManager
     /// <summary>
     /// Configure permission manager
     /// </summary>
-    public void Configure()
+    public async Task InsertPermissionsAsync()
     {
-        var permissionRecords = _permissionRecordRepository.GetAll(getCacheKey: _ => null).Distinct().ToHashSet();
+        var permissionRecords = (await _permissionRecordRepository.GetAllAsync(query => query, getCacheKey: _ => null)).Distinct().ToHashSet();
         var exists = permissionRecords.Select(p => p.SystemName).ToHashSet();
 
         var configs = Singleton<ITypeFinder>.Instance.FindClassesOfType<IPermissionConfigManager>()
@@ -277,7 +275,7 @@ public partial class PermissionManager : IPermissionManager
             .Where(c => !exists.Contains(c.SystemName))
             .ToList();
 
-        InstallPermissions(configs);
+        await InstallPermissionsAsync(configs);
     }
 
     /// <summary>

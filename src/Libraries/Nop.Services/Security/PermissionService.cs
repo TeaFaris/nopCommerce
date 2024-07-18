@@ -42,7 +42,7 @@ public class PermissionService : IPermissionService
 
     #endregion
 
-    #region Utilites
+    #region Utilities
 
     /// <summary>
     /// Get permission records by customer role identifier

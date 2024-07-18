@@ -71,6 +71,7 @@ public partial class NopStartup : INopStartup
         services.AddScoped<IReturnRequestModelFactory, ReturnRequestModelFactory>();
         services.AddScoped<IReviewTypeModelFactory, ReviewTypeModelFactory>();
         services.AddScoped<IScheduleTaskModelFactory, ScheduleTaskModelFactory>();
+        services.AddScoped<ISecurityModelFactory, SecurityModelFactory>();
         services.AddScoped<ISettingModelFactory, SettingModelFactory>();
         services.AddScoped<IShippingModelFactory, ShippingModelFactory>();
         services.AddScoped<IShoppingCartModelFactory, ShoppingCartModelFactory>();
@@ -119,7 +120,7 @@ public partial class NopStartup : INopStartup
     {
         var permission = EngineContext.Current.Resolve<IPermissionManager>();
 
-        permission.Configure();
+        permission.InsertPermissionsAsync();
     }
 
     /// <summary>

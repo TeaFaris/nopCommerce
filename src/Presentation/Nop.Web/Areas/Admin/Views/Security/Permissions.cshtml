@@ -1,5 +1,5 @@
 @using Nop.Services.Security
-@model Nop.Web.Areas.Admin.Models.Security.ConfigurationModel
+@model Nop.Web.Areas.Admin.Models.Security.PermissionConfigurationModel
 
 @{
     //page title
@@ -25,10 +25,7 @@
 <form asp-controller="Security" asp-action="Permissions" method="post" id="permissions-form">
     <div class="content-header clearfix">
         <div class="float-right">
-            <button type="submit" name="save" class="btn btn-primary">
-                <i class="far fa-save"></i>
-                @T("Admin.Common.Save")
-            </button>
+            @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.PermissionListButtons, additionalData = Model })
         </div>
     </div>
 
@@ -40,7 +37,7 @@
                         <div class="card-body">
                             <p>
                                 @T("Admin.Configuration.ACL.Description")
-                                <nop-doc-reference asp-string-resource="@T("Admin.Configuration.ACL.DocumentationReference", NopSecurityDefaults.AclDocsLink + NopLinksDefaults.Utm.OnAdmin)" asp-add-wrapper="false" />
+                                <nop-doc-reference asp-string-resource="@T("Admin.Configuration.ACL.DocumentationReference", Docs.Acl + Utm.OnAdmin)" asp-add-wrapper="false" />
                             </p>
                             @if (!Model.IsPermissionsAvailable)
                             {

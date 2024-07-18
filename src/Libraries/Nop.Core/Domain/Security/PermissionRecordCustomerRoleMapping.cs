@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents a permission record-customer role mapping class
 /// </summary>
-public class PermissionRecordCustomerRoleMapping : BaseEntity
+public partial class PermissionRecordCustomerRoleMapping : BaseEntity
 {
     /// <summary>
     /// Gets or sets the permission record identifier

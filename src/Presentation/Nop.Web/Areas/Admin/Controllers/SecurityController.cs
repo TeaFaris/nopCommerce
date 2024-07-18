@@ -8,6 +8,7 @@ using Nop.Services.Customers;
 using Nop.Services.Localization;
 using Nop.Services.Messages;
 using Nop.Services.Security;
+using Nop.Web.Areas.Admin.Factories;
 using Nop.Web.Areas.Admin.Models.Security;
 using Nop.Web.Framework.Models.Extensions;
 using Nop.Web.Framework.Mvc.Filters;
@@ -21,9 +22,10 @@ public partial class SecurityController : BaseAdminController
     protected readonly ICustomerService _customerService;
     protected readonly ILocalizationService _localizationService;
     protected readonly Services.Logging.ILogger _logger;
-    protected readonly IPermissionManager _permissionManager;
     protected readonly INotificationService _notificationService;
+    protected readonly IPermissionManager _permissionManager;
     protected readonly IPermissionService _permissionService;
+    protected readonly ISecurityModelFactory _securityModelFactory;
     protected readonly ISettingService _settingService;
     protected readonly IWorkContext _workContext;
     protected readonly SecuritySettings _securitySettings;
@@ -37,9 +39,10 @@ public partial class SecurityController : BaseAdminController
     public SecurityController(ICustomerService customerService,
         ILocalizationService localizationService,
         Services.Logging.ILogger logger,
-        IPermissionManager permissionManager,
         INotificationService notificationService,
+        IPermissionManager permissionManager,
         IPermissionService permissionService,
+        ISecurityModelFactory securityModelFactory,
         ISettingService settingService,
         IWorkContext workContext,
         SecuritySettings securitySettings)
@@ -47,9 +50,10 @@ public partial class SecurityController : BaseAdminController
         _customerService = customerService;
         _localizationService = localizationService;
         _logger = logger;
-        _permissionManager = permissionManager;
         _notificationService = notificationService;
+        _permissionManager = permissionManager;
         _permissionService = permissionService;
+        _securityModelFactory = securityModelFactory;
         _settingService = settingService;
         _workContext = workContext;
         _securitySettings = securitySettings;
@@ -84,7 +88,7 @@ public partial class SecurityController : BaseAdminController
         var permissionItemModel = new PermissionItemModel
         {
             Id = permissionRecord.Id,
-            PermissionName = await _localizationService.GetLocalizedPermissionNameAsync(permissionRecord, await _workContext.GetWorkingLanguageAsync()),
+            PermissionName = await _localizationService.GetLocalizedPermissionNameAsync(permissionRecord),
             PermissionAppliedFor = appliedFor,
             SelectedCustomerRoleIds = ids.ToList(),
             AvailableCustomerRoles = availableRoles.Select(role => new SelectListItem
@@ -128,27 +132,7 @@ public partial class SecurityController : BaseAdminController
 
         return model;
     }
-
-    /// <summary>
-    /// Prepare ACL configuration model
-    /// </summary>
-    /// <param name="model">Configuration model</param>
-    /// <returns>
-    /// A task that represents the asynchronous operation
-    /// The task result contains the configuration model
-    /// </returns>
-    protected async Task<ConfigurationModel> PrepareConfigurationModelAsync(ConfigurationModel model)
-    {
-        ArgumentNullException.ThrowIfNull(model);
-
-        var customerRoles = await _customerService.GetAllCustomerRolesAsync(true);
-        model.AreCustomerRolesAvailable = customerRoles.Any();
-        var permissionRecords = await _permissionManager.GetAllPermissionRecordsAsync();
-        model.IsPermissionsAvailable = permissionRecords.Any();
-
-        return model;
-    }
-
+    
     /// <summary>
     /// Prepare paged permission item list model
     /// </summary>
@@ -259,20 +243,9 @@ public partial class SecurityController : BaseAdminController
     public async Task<IActionResult> Permissions()
     {
         //prepare model
-        var model = await PrepareConfigurationModelAsync(new ConfigurationModel());
+        var model = await _securityModelFactory.PreparePermissionConfigurationModelAsync(new PermissionConfigurationModel());
 
         return View(model);
-    }
-
-    [HttpPost]
-    [CheckPermission(StandardPermission.Configuration.MANAGE_ACL)]
-    public async Task<IActionResult> Permissions(ConfigurationModel model, IFormCollection form)
-    {
-        await _settingService.SaveSettingAsync(_securitySettings);
-
-        _notificationService.SuccessNotification(await _localizationService.GetResourceAsync("Admin.Configuration.ACL.Updated"));
-
-        return await Permissions();
     }
 
     #endregion

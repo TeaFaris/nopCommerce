@@ -8,6 +8,7 @@ using Nop.Services.Localization;
 using Nop.Services.Security;
 
 namespace Nop.Web.Framework.Mvc.Filters;
+
 /// <summary>
 /// Represents a filter attribute that confirms access to functional
 /// </summary>
@@ -98,10 +99,10 @@ public class CheckPermissionAttribute : TypeFilterAttribute
             if (!DataSettingsManager.IsDatabaseInstalled())
                 return;
 
-            //there is AdminAuthorizeFilter, so check access
+            //there is CheckPermissionFilter, so check access
             if (context.Filters.Any(filter => filter is CheckPermissionFilter))
             {
-                //authorize permission of access to the admin area
+                //authorize permission
                 if (await _permissionService.AuthorizeAsync(_permissionSystemName))
                     return;
 

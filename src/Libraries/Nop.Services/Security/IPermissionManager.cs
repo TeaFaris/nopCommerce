@@ -63,9 +63,9 @@ public interface IPermissionManager
     Task InsertPermissionRecordCustomerRoleMappingAsync(PermissionRecordCustomerRoleMapping permissionRecordCustomerRoleMapping);
 
     /// <summary>
-    /// Configure permission manager
+    /// Insert permissions
     /// </summary>
-    void Configure();
+    Task InsertPermissionsAsync();
 
     /// <summary>
     /// Inserts a permission record-customer role mappings

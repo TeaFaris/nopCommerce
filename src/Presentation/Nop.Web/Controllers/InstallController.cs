@@ -63,7 +63,7 @@ public partial class InstallController : Controller
 
     #endregion
 
-    #region Utilites
+    #region Utilities
 
     protected virtual InstallModel PrepareCountryList(InstallModel model)
     {

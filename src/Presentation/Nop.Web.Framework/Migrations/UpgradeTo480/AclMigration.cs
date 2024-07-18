@@ -1,5 +1,4 @@
-﻿using System.Security;
-using FluentMigrator;
+﻿using FluentMigrator;
 using Nop.Core.Domain.Localization;
 using Nop.Core.Domain.Security;
 using Nop.Data;
