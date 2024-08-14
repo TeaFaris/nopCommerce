@@ -79,7 +79,7 @@
                     @await Component.InvokeAsync(typeof(AdminWidgetViewComponent), new { widgetZone = AdminWidgetZones.HeaderToggleAfter })
                 </ul>
                 <a href="@Url.Content("~/Admin")" class="brand-link navbar-dark">
-                    <img src="~/css/admin/images/logo.png" alt="logo.png" class="brand-image logo d-block d-md-none d-sm-block d-sm-none">
+                    <img src="~/css/admin/images/logo.svg" alt="logo.svg" class="brand-image logo d-block d-md-none d-sm-block d-sm-none">
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -156,13 +156,13 @@
             <aside class="main-sidebar sidebar-dark-primary elevation-4">
                 <!-- Brand Logo -->
             <a href="@Url.Content("~/Admin")" class="brand-link navbar-dark logo-switch">
-                    <img src="~/css/admin/images/logo.png" alt="logo.png" class="brand-image-xl logo-xl">
-                    <img src="~/css/admin/images/logo-mini.png" alt="logo.png" class="brand-image-xs logo-xs">
+                    <img src="~/css/admin/images/logo.svg" alt="logo.svg" class="brand-image-xl logo-xl m-1" style="left: 20px; top: 9px; height: 30px;">
+                    <img src="~/css/admin/images/logo-mini.svg" alt="logo.svg" class="brand-image-xs logo-xs" style="left: 16px;">
                 </a>
                 <div class="sidebar">
                     <div class="sidebar-form">
                         <div id="search-box">
-                            <input type="text" class="form-control admin-search-box typeahead" placeholder="@T("Admin.Menu.Search")">
+                            <input type="text" class="form-control admin-search-box typeahead" style="border-radius: 10px;" placeholder="@T("Admin.Menu.Search")">
                         </div>
                     </div>
                     <nav class="mt-2">
@@ -191,9 +191,7 @@
                         @if (!storeInformationSettings.HidePoweredByNopCommerce)
                         {
                             <div class="col-md-4 col-xs-12 text-md-left text-center">
-                                @*Would you like to remove the "Powered by nopCommerce" link in the bottom of the footer?
-                                    Please find more info at https://www.nopcommerce.com/nopcommerce-copyright-removal-key*@
-                                Powered by <a href="@(OfficialSite.Main + Utm.OnAdminFooter)" target="_blank">nopCommerce</a>
+                                Powered by <a href="https://creatorfactory.ru/" target="_blank">Creator Factory</a>
                             </div>
                         }
                         else
@@ -204,7 +202,7 @@
                             @((await dateTimeHelper.ConvertToUserTimeAsync(DateTime.Now)).ToString("f", CultureInfo.CurrentCulture))
                         </div>
                         <div class="col-md-4 col-xs-12 text-md-right text-center">
-                            <b>nopCommerce version @NopVersion.FULL_VERSION</b>
+                            <b>Creator Factory System version @NopVersion.FULL_VERSION</b>
                         </div>
                     </div>
                 </div>

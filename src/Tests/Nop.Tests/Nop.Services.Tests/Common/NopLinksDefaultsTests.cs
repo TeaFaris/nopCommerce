@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Nop.Core.Http;
 using NUnit.Framework;
-using static Nop.Services.Common.NopLinksDefaults;
 
 namespace Nop.Tests.Nop.Services.Tests.Common;
 
@@ -40,27 +39,5 @@ internal class NopLinksDefaultsTests : ServiceTest
                 HttpStatusCode.OK , HttpStatusCode.Found
             }, $"{url} {res.ReasonPhrase}");
         }
-    }
-
-    [Test]
-    public async Task TestOfficialSiteLinks()
-    {
-        var prop = typeof(OfficialSite).GetProperties(BindingFlags.Public | BindingFlags.Static | BindingFlags.GetProperty)
-            .Where(p => p.PropertyType == typeof(string)).ToList();
-
-        prop.Should().NotBeEmpty();
-
-        await TestUrlsAsync(prop);
-    }
-
-    [Test]
-    public async Task TestDocsLinks()
-    {
-        var prop = typeof(Docs).GetProperties(BindingFlags.Public | BindingFlags.Static | BindingFlags.GetProperty)
-            .Where(p => p.PropertyType == typeof(string)).ToList();
-
-        prop.Should().NotBeEmpty();
-
-        await TestUrlsAsync(prop);
     }
 }

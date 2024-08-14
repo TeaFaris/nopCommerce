@@ -43,8 +43,6 @@
         <div class="cards-group">
             <div class="card card-default">
                 <div class="card-body">
-                    <nop-doc-reference asp-string-resource="@T("Admin.Documentation.Reference.CountriesStates", Docs.CountriesStates + Utm.OnAdmin)" />
-
                     @await Html.PartialAsync("Table", new DataTablesModel
                     {
                         Name = "countries-grid",
@@ -220,7 +218,6 @@
                                 <em>@T("Admin.Configuration.Countries.ImportTip")</em>
                             </li>
                             <li>
-                                <em><a href="@(OfficialSite.StatesPackage + Utm.OnAdminCountries)" target="_blank">https://www.nopcommerce.com/all-states-provinces-package-nopcommerce-team</a></em>
                             </li>
                         </ul>
                         <div class="form-group row">

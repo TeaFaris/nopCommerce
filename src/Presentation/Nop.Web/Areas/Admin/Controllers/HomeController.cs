@@ -80,7 +80,6 @@ public partial class HomeController : BaseAdminController
         if (!string.IsNullOrEmpty(progress))
         {
             var locale = await _localizationService.GetResourceAsync("Admin.Configuration.LanguagePackProgressMessage");
-            _notificationService.SuccessNotification(string.Format(locale, progress, NopLinksDefaults.OfficialSite.Translations), false);
             await _genericAttributeService.SaveAttributeAsync(currentLanguage, NopCommonDefaults.LanguagePackProgressAttribute, string.Empty);
         }
 
